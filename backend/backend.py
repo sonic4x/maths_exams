@@ -45,6 +45,7 @@ start_time = 0
 num_of_wrong_answer = 0
 max_operator_num=50
 min_operator_num=1
+min_diff_between_operator_numbers = 1
 
 
 @app.route('/api/getdiscription', methods=['GET'])
@@ -73,6 +74,7 @@ def get_exam():
 def setting():
     global max_operator_num
     global min_operator_num
+    global min_diff_between_operator_numbers
 
     data = json.loads(request.data)
     difficulty = int(data['difficulty'])
@@ -80,15 +82,19 @@ def setting():
     if difficulty >= 3:
         min_operator_num = 30
         max_operator_num = 100
+        min_diff_between_operator_numbers = 11
     elif difficulty == 2:
         min_operator_num = 30
         max_operator_num = 60
+        min_diff_between_operator_numbers = 7
     elif difficulty == 1:
         min_operator_num = 10
         max_operator_num = 50
+        min_diff_between_operator_numbers = 5
     else:
         min_operator_num = 1
         max_operator_num = 50
+        min_diff_between_operator_numbers = 2
     return jsonify(
         difficulty=difficulty,
     )
@@ -157,6 +163,13 @@ def get_random_test():
     num_b = randrange(min_num, max_num+1)
     if num_a < num_b:
         num_a, num_b = num_b, num_a  # swap the number
+    
+    print(num_a)
+    print(num_b)
+    print(min_diff_between_operator_numbers)
+    if num_a - num_b < min_diff_between_operator_numbers: # ensure the 2 numbers differ at specific level
+        num_a += min_diff_between_operator_numbers
+        num_a = min(num_a, max_operator_num)
     # random operator
     operators = ['+', '-']
     op = choice(operators)
