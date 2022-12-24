@@ -8,6 +8,7 @@ import argparse
 import time
 from time import strftime
 from time import gmtime
+import math
 
 ####### Usage ########
 # python backend.py - e 10.0.0.19
@@ -46,7 +47,7 @@ num_of_wrong_answer = 0
 max_operator_num=50
 min_operator_num=1
 min_diff_between_operator_numbers = 1
-
+operators = []
 
 @app.route('/api/getdiscription', methods=['GET'])
 def ping_pong():
@@ -75,26 +76,46 @@ def setting():
     global max_operator_num
     global min_operator_num
     global min_diff_between_operator_numbers
+    global operators
 
     data = json.loads(request.data)
     difficulty = int(data['difficulty'])
-    print(difficulty)
-    if difficulty >= 3:
-        min_operator_num = 30
-        max_operator_num = 100
-        min_diff_between_operator_numbers = 11
-    elif difficulty == 2:
-        min_operator_num = 30
-        max_operator_num = 60
-        min_diff_between_operator_numbers = 7
-    elif difficulty == 1:
-        min_operator_num = 10
-        max_operator_num = 50
-        min_diff_between_operator_numbers = 5
-    else:
+    operators = data['operator_list']
+
+    if operators == ['*']:
+        if difficulty >= 3:
+            min_operator_num = 5
+            max_operator_num = 10
+        elif difficulty == 2:
+            min_operator_num = 2
+            max_operator_num = 9
+        elif difficulty == 1:
+            min_operator_num = 2
+            max_operator_num = 7
+        else:
+            min_operator_num = 2
+            max_operator_num = 5
+    elif operators == ["/"]:
         min_operator_num = 1
-        max_operator_num = 50
-        min_diff_between_operator_numbers = 2
+        max_operator_num = 9
+    else:
+        if difficulty >= 3:
+            min_operator_num = 30
+            max_operator_num = 100
+            min_diff_between_operator_numbers = 11
+        elif difficulty == 2:
+            min_operator_num = 30
+            max_operator_num = 60
+            min_diff_between_operator_numbers = 7
+        elif difficulty == 1:
+            min_operator_num = 10
+            max_operator_num = 50
+            min_diff_between_operator_numbers = 5
+        else:
+            min_operator_num = 1
+            max_operator_num = 50
+            min_diff_between_operator_numbers = 2
+
     return jsonify(
         difficulty=difficulty,
     )
@@ -107,16 +128,17 @@ def check_answer():
 
     print(request.data)
     data = json.loads(request.data)  # 将json字符串转为dict
+    eval_data = get_op_str_from_human(data['test_str'])
+    print("eval_data:"+ eval_data)
+    result = str(eval(eval_data, {}, {}))
+    print("result:" + result)
 
-    result = str(eval(data['test_str'], {}, {}))
-
-    if result == data['test_answer']:
+    if math.isclose(float(result), float(data['test_answer']), rel_tol=1e-3):
         if nth_item >= num_of_test:
             # already reach the end
             # check the time spent
             lap_time = round(time.time() - start_time)
             duration_str = strftime("%H:%M:%S", gmtime(lap_time))
-            print(duration_str)
             nth_item = 0
             return jsonify(
                 correct=1,
@@ -164,20 +186,24 @@ def get_random_test():
     if num_a < num_b:
         num_a, num_b = num_b, num_a  # swap the number
     
-    print(num_a)
-    print(num_b)
-    print(min_diff_between_operator_numbers)
+
     if num_a - num_b < min_diff_between_operator_numbers: # ensure the 2 numbers differ at specific level
         num_a += min_diff_between_operator_numbers
         num_a = min(num_a, max_operator_num)
     # random operator
-    operators = ['+', '-']
+    # operators = ['+', '-']
     op = choice(operators)
 
     exam = str(num_a) + ' ' + op + ' ' + str(num_b)
+    exam = get_op_str_to_human(exam)
     nth_item += 1
     return exam
 
+def get_op_str_to_human(op):
+    return op.replace("*","x").replace("/","÷")
+
+def get_op_str_from_human(op):
+    return op.replace("x","*").replace("÷","/")
 
 if __name__ == '__main__':
     # num_of_test = 50

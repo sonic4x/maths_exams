@@ -15,6 +15,8 @@ export default {
         2: 'A+',
         3: 'A++',
       },
+      items: ['+', '-', '*', '/'],
+      selected_items: ['+', '-'],
     }
   },
   computed: {
@@ -33,6 +35,7 @@ export default {
       const path = "http://" + global_v.api_server + ":5000/api/setting";
       axios
         .post(path, {
+          operator_list: this.selected_items,
           difficulty: this.difficulty,
         })
         .then((res) => {
@@ -47,6 +50,7 @@ export default {
 
 <template>
   <div class="settings">
+    <v-select v-model="selected_items" :items="items" label="选择算术符号" multiple chips></v-select>
     <v-slider v-model="difficulty" class="align-center" color="orange" label="难度选择" :ticks="tickLabels"
       show-ticks="always" tick-size="4" :max="3" step=1 thumb-label="always">
       <template v-slot:thumb-label="{ modelValue }">
@@ -54,9 +58,6 @@ export default {
       </template>
     </v-slider>
     <div class="btn_even">
-      <!-- <v-btn rounded="pill" color="primary" @click="applySetting">
-        应用设定
-      </v-btn> -->
       <v-btn rounded="pill" color="green" @click="applySetting">
         开始答题
       </v-btn>
