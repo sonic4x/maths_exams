@@ -9,6 +9,10 @@ import time
 from time import strftime
 from time import gmtime
 import math
+from datetime import datetime
+import os
+import csv
+import pandas as pd
 
 ####### Usage ########
 # python backend.py - e 10.0.0.19
@@ -48,6 +52,8 @@ max_operator_num=50
 min_operator_num=1
 min_diff_between_operator_numbers = 1
 operators = []
+history_file = "history_record.csv"
+break_record = 0
 
 @app.route('/api/getdiscription', methods=['GET'])
 def ping_pong():
@@ -120,6 +126,34 @@ def setting():
         difficulty=difficulty,
     )
 
+@app.route('/api/history', methods=['POST'])
+def fetch_history():
+    if os.path.exists(history_file):
+        df = pd.read_csv(history_file)
+        print(df)
+
+        col_date = df['date']
+        # col_date= list(map(str, col_date))
+        col_date = col_date.values.tolist() # put the specific column into list
+
+        col_duration = df['duration']
+        col_duration = list(map(int, col_duration)) # convert the all elements from str to int, then convert to list
+
+        print("date_values:{}".format(col_date))
+        print("duration_values:{}".format(col_duration))
+        
+        return jsonify(
+            date_values=col_date,
+            duration_values=col_duration,
+        )
+    else:
+        return jsonify(
+            date_values=[],
+            duration_values=[],
+        )
+
+
+
 @app.route('/api/checkanswer', methods=['POST'])
 def check_answer():
     global num_of_test
@@ -137,16 +171,30 @@ def check_answer():
         if nth_item >= num_of_test:
             # already reach the end
             # check the time spent
-            lap_time = round(time.time() - start_time)
+            lap_time = round(time.time() - start_time) # Unit: second
+            print("lap_time:{}".format(lap_time))
             duration_str = strftime("%H:%M:%S", gmtime(lap_time))
+
+            # check correct rate
+            correct_rate = round(max(0,(num_of_test - num_of_wrong_answer)) / num_of_test * 100)
+            print("correct_rate:{}%".format(correct_rate))
+
+            # check if break the record
+            break_record = False
+            if is_break_record(lap_time):
+                break_record = True
+            # save the history
+            today = datetime.today().date()
+            save_history(today, lap_time, correct_rate)
+
             nth_item = 0
             return jsonify(
                 correct=1,
                 end=1,
-                exam='恭喜你完成所有考题',
                 duration=duration_str,
                 test_id=nth_item,
-                wrong_num=num_of_wrong_answer
+                wrong_num=num_of_wrong_answer,
+                break_record=break_record,
             )
         item = get_random_test()
         return jsonify(
@@ -160,6 +208,37 @@ def check_answer():
             correct=0
         )
 
+def save_history(today_date, test_duration, correct_rate):
+    # check csv exist
+
+    if os.path.exists(history_file):
+        with open(history_file, "a") as csv_file:
+            writer = csv.writer(csv_file)
+            writer.writerow([today_date, test_duration, correct_rate])
+    else:
+        # new file and write header, then save the content
+        with open(history_file, "w") as csv_file:
+            writer = csv.writer(csv_file)
+            writer.writerow(["date","duration","correct_rate"])
+            writer.writerow([today_date, test_duration, correct_rate])
+
+def is_break_record(test_duration):
+    if os.path.exists(history_file):
+        df = pd.read_csv(history_file)
+        df = df.sort_values(by=['duration'], ascending=True)
+        df = df.reset_index(drop=True) # After sorting, the index is messy, need to reindex.
+        print(df)
+        min_duration_value = df['duration'][0]
+        max_duration_value = df['duration'][len(df)-1]
+        print(min_duration_value)
+        print(max_duration_value)
+
+        if test_duration < min_duration_value:
+            return True
+        else:
+            return False
+    else:
+        return True
 
 @app.route('/')
 def index():

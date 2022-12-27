@@ -3,11 +3,14 @@ import axios from 'axios';
 import global_v from "./global_v";
 import exams from './exams.vue';
 import Home from './Home.vue';
+import HistoryChart from './HistoryChart.vue';
 export default {
+  components: { HistoryChart },
   data() {
     return {
       difficulty: 0,
       setting_applied: 0,
+      show_history: 0,
       satisfactionEmojis: ['😁', '🙂', '😐', '😭'],
       tickLabels: {
         0: 'B',
@@ -21,6 +24,9 @@ export default {
   },
   computed: {
     currentView() {
+      if (this.show_history == 1) {
+        return HistoryChart
+      }
       if (this.setting_applied == 1) {
         return exams
       }
@@ -41,7 +47,21 @@ export default {
         .then((res) => {
           this.difficulty = res.data["difficulty"]
           this.setting_applied = 1;
+          this.show_history = 0;
         });
+    },
+    showHistory() {
+      this.show_history = 1;
+      this.setting_applied = 0;
+      // const path = "http://" + global_v.api_server + ":5000/api/history";
+      // axios
+      //   .post(path, {
+      //     option: 0,
+      //   })
+      //   .then((res) => {
+      //     this.show_history = 1;
+      //     this.setting_applied = 0;
+      //   });
     }
   },
 }
@@ -61,9 +81,15 @@ export default {
       <v-btn rounded="pill" color="green" @click="applySetting">
         开始答题
       </v-btn>
+      <v-btn rounded="pill" color="blue" @click="showHistory">
+        历史表现
+      </v-btn>
     </div>
     <component :is="currentView" />
   </div>
+  <!-- <div>
+    <HistoryChart />
+  </div> -->
 </template>
 
 <style scoped>

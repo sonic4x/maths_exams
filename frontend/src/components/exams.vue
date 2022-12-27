@@ -19,6 +19,7 @@ export default {
       finish_result: {
         duration: "",
         wrong_num: "",
+        break_record: false,
       },
     };
   },
@@ -52,17 +53,18 @@ export default {
             if (res.data["end"] == 1) {
               this.finish_result.duration = res.data["duration"];
               this.finish_result.wrong_num = res.data["wrong_num"];
+              this.finish_result.break_record = res.data["break_record"];
               // console.log(this.finish_result.duration);
               // console.log(this.finish_result.wrong_num);
-              this.finish_message =
-                "恭喜你完成所有考题，共耗时" + res.data["duration"];
-              if (res.data["wrong_num"] > 0) {
-                this.finish_message += "，答错" + res.data["wrong_num"] + "题";
-              }
+              // this.finish_message =
+              //   "恭喜你完成所有考题，共耗时" + res.data["duration"];
+              // if (res.data["wrong_num"] > 0) {
+              //   this.finish_message += "，答错" + res.data["wrong_num"] + "题";
+              // }
 
               this.dialog = true;
             } else {
-              this.show = true;
+              this.show = true;  // Some animation
               this.msg = res.data["exam"];
               this.test_id = res.data["test_id"];
               this.answer = "";
@@ -102,7 +104,7 @@ export default {
     </Transition>
     <!--<button @click="submit(answer)"> 提交答案 </button>-->
     <finish-dialogue :dialog="this.dialog" :duration="this.finish_result.duration"
-      :wrong_num="this.finish_result.wrong_num" />
+      :wrong_num="this.finish_result.wrong_num" :break_record="this.finish_result.break_record" />
   </div>
 </template>
 

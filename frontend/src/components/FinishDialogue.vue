@@ -5,6 +5,7 @@ export default {
   props: {
     duration: String,
     wrong_num: Number,
+    break_record: Boolean,
     dialog: Boolean,
   },
   computed: {
@@ -18,7 +19,7 @@ export default {
     allCorrect() {
       return this.wrong_num > 0 ? false : true;
     },
-    resultRating(){
+    resultRating() {
       return this.wrong_num > 0 ? 2 : 3;
     },
   },
@@ -41,33 +42,28 @@ export default {
 
 
 <template>
+  <audio v-if="dialog" src="assets/finish.mp3" autoplay="autoplay">
+  </audio>
   <v-dialog v-model="dialog" width="420" transition="dialog-bottom-transition">
     <v-card>
-      <v-card-title class="text-h5 grey lighten-2"> 练习结果 </v-card-title>
+      <v-card-title class="text-h5 grey lighten-2"> 测试评价 </v-card-title>
 
       <v-card-text>
         <h2>恭喜你完成所有考题</h2>
-        <h2>共耗时：{{ duration }}</h2>
+        <h2><span>共耗时：{{ duration }}</span><span v-if="break_record"> (破记录了哟🥙)</span></h2>
         <h2>{{ wrongNumMessage }}</h2>
         <div class="text-center">
-        <v-rating
-          v-model="resultRating"
-          length=3
-          class="ma-2"
-          density="default"
-          color="purple"
-          bg-color="purple-lighten-3"
-          large
-        ></v-rating>
+          <v-rating v-model="resultRating" length=3 class="ma-2" density="default" color="purple"
+            bg-color="purple-lighten-3" large></v-rating>
         </div>
-        
+
       </v-card-text>
 
       <v-divider></v-divider>
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="primary" text @click="dialog = false"> I accept </v-btn>
+        <v-btn color="primary" text @click="dialog = false"> 退出休息吧 </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -84,6 +80,7 @@ export default {
   right: 0;
   background-color: rgba(0, 0, 0, 0.3);
 }
+
 .center {
   position: fixed;
   top: 50%;
@@ -92,6 +89,7 @@ export default {
   background-color: white;
   padding: 20px;
 }
+
 .btn {
   margin: 10px;
 }

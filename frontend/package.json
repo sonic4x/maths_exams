@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "axios": "^1.2.1",
+    "chart.js": "^4.1.1",
     "dotenv": "^16.0.3",
     "material-design-icons-iconfont": "^6.7.0",
     "vue": "^3.2.41",
