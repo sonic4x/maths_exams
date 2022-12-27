@@ -3,6 +3,8 @@ import Chart from 'chart.js/auto'
 import planetChartData from './planet-data.js'
 import axios from 'axios';
 import global_v from "./global_v";
+
+let delayed;
 export default {
     name: 'PlanetChart',
     data() {
@@ -20,11 +22,56 @@ export default {
                         tension: 0.1
                     }]
                 },
+                options: {
+                    animation: {
+                        onComplete: () => {
+                            delayed = true;
+                        },
+                        delay: (context) => {
+                            let delay = 0;
+                            if (context.type === 'data' && context.mode === 'default' && !delayed) {
+                                delay = context.dataIndex * 200 + context.datasetIndex * 100;
+                            }
+                            return delay;
+                        },
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: '做题历史轨迹'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            title: {
+                                display: true,
+                                text: '耗时'
+                            },
+                            min: 0,
+                            max: 900,
+                            ticks: {
+                                stepSize: 60,
+                                autoSkip: false,
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                // For a category axis, the val is the index so the lookup via getLabelForValue is needed
+                                // callback: function (val, index) {
+                                //     // Hide every 2nd tick label
+                                //     return index % 2 === 0 ? this.getLabelForValue(val) : '';
+                                // },
+                                color: 'blue',
+                            }
+                        }
+                    }
+
+                }
             }
         }
     },
     mounted() {
-
+        delayed = false;
         const path = "http://" + global_v.api_server + ":5000/api/history";
         axios
             .post(path, {
