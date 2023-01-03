@@ -139,12 +139,16 @@ def fetch_history():
         col_duration = df['duration']
         col_duration = list(map(int, col_duration)) # convert the all elements from str to int, then convert to list
 
+        col_precision=df['correct_rate']
+        col_precision = list(map(int, col_precision))
+
         print("date_values:{}".format(col_date))
         print("duration_values:{}".format(col_duration))
         
         return jsonify(
             date_values=col_date,
             duration_values=col_duration,
+            precision_values=col_precision,
         )
     else:
         return jsonify(

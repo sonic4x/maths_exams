@@ -10,7 +10,7 @@ export default {
     data() {
         return {
             // planetChartData: planetChartData
-            chartData: {
+            durationChartData: {
                 type: 'line',
                 data: {
                     labels: ["Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus"], // will be override
@@ -48,10 +48,60 @@ export default {
                                 text: '耗时'
                             },
                             min: 0,
-                            max: 900,
+                            max: 1000,
+
+                        },
+                        x: {
                             ticks: {
-                                stepSize: 60,
-                                autoSkip: false,
+                                // For a category axis, the val is the index so the lookup via getLabelForValue is needed
+                                // callback: function (val, index) {
+                                //     // Hide every 2nd tick label
+                                //     return index % 2 === 0 ? this.getLabelForValue(val) : '';
+                                // },
+                                color: 'blue',
+                                autoSkip: true,
+                            }
+                        }
+                    }
+
+                }
+            },
+            precisionChartData: {
+                type: 'line',
+                data: {
+                    labels: [], // will be override
+                    datasets: [{
+                        label: '过去几天做题正确率',
+                        data: [],  // will be override
+                        fill: false,
+                        borderColor: 'rgb(75, 192, 192)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    animation: {
+                        onComplete: () => {
+                            delayed = true;
+                        },
+                        delay: (context) => {
+                            let delay = 0;
+                            if (context.type === 'data' && context.mode === 'default' && !delayed) {
+                                delay = context.dataIndex * 200 + context.datasetIndex * 100;
+                            }
+                            return delay;
+                        },
+                    },
+                    scales: {
+                        y: {
+                            title: {
+                                display: true,
+                                text: '正确率%'
+                            },
+                            min: 0,
+                            max: 100,
+                            ticks: {
+                                // stepSize: 10,
+                                autoSkip: true,
                             }
                         },
                         x: {
@@ -62,6 +112,7 @@ export default {
                                 //     return index % 2 === 0 ? this.getLabelForValue(val) : '';
                                 // },
                                 color: 'blue',
+                                autoSkip: true,
                             }
                         }
                     }
@@ -78,10 +129,15 @@ export default {
                 option: 0,
             })
             .then((res) => {
-                this.chartData.data.labels = res.data["date_values"]
-                this.chartData.data.datasets[0].data = res.data["duration_values"]
-                const ctx = document.getElementById('planet-chart');
-                new Chart(ctx, this.chartData);
+                this.durationChartData.data.labels = res.data["date_values"]
+                this.durationChartData.data.datasets[0].data = res.data["duration_values"]
+                const ctx_duration = document.getElementById('duration-chart');
+                new Chart(ctx_duration, this.durationChartData);
+
+                this.precisionChartData.data.labels = res.data["date_values"]
+                this.precisionChartData.data.datasets[0].data = res.data["precision_values"]
+                const ctx_precision = document.getElementById('precision-chart');
+                new Chart(ctx_precision, this.precisionChartData);
             });
     }
 };
@@ -91,7 +147,8 @@ export default {
 
     <div>
         <!-- display must be inline, very important-->
-        <canvas id="planet-chart" style="display: inline; box-sizing:border-box;"></canvas>
+        <canvas id="duration-chart" style="display: inline; box-sizing:border-box;"></canvas>
+        <canvas id="precision-chart" style="display: inline; box-sizing:border-box;"></canvas>
     </div>
 
 </template>
