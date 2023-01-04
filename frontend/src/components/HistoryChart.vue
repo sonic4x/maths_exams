@@ -36,10 +36,10 @@ export default {
                         },
                     },
                     plugins: {
-                        title: {
-                            display: true,
-                            text: '做题历史轨迹'
-                        }
+                        // title: {
+                        //     display: true,
+                        //     text: '做题历史轨迹'
+                        // }
                     },
                     scales: {
                         y: {
@@ -147,8 +147,11 @@ export default {
 
     <div>
         <!-- display must be inline, very important-->
-        <canvas id="duration-chart" style="display: inline; box-sizing:border-box;"></canvas>
-        <canvas id="precision-chart" style="display: inline; box-sizing:border-box;"></canvas>
+        <Flicking>
+            <canvas id="duration-chart" style="display: inline; box-sizing:border-box;"></canvas>
+            <canvas id="precision-chart" style="display: inline; box-sizing:border-box;"></canvas>
+        </Flicking>
+
     </div>
 
 </template>

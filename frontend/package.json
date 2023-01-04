@@ -7,6 +7,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@egjs/vue3-flicking": "^4.10.4",
     "axios": "^1.2.1",
     "chart.js": "^4.1.1",
     "dotenv": "^16.0.3",

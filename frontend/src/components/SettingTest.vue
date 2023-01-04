@@ -3,6 +3,7 @@ import axios from 'axios';
 import global_v from "./global_v";
 import exams from './exams.vue';
 import Home from './Home.vue';
+import Home2 from './Home2.vue';
 import HistoryChart from './HistoryChart.vue';
 export default {
   components: { HistoryChart },
@@ -31,7 +32,7 @@ export default {
         return exams
       }
       else {
-        return Home
+        return Home2
       }
 
     }

@@ -11,6 +11,9 @@ import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import {aliases,mdi} from 'vuetify/iconsets/mdi'
 
+import Flicking from "@egjs/vue3-flicking";
+import "@egjs/vue3-flicking/dist/flicking.css";
+
 const vuetify = createVuetify({
   components,
   directives,
@@ -24,5 +27,6 @@ const vuetify = createVuetify({
 const app = createApp(App)
 
 app.use(router)
-app.use(vuetify)  
+app.use(vuetify)
+app.component("Flicking", Flicking);  
 app.mount('#app')
