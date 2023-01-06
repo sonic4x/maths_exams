@@ -14,6 +14,7 @@ import {aliases,mdi} from 'vuetify/iconsets/mdi'
 import Flicking from "@egjs/vue3-flicking";
 import "@egjs/vue3-flicking/dist/flicking.css";
 
+import 'vuetify/dist/vuetify.min.css'
 const vuetify = createVuetify({
   components,
   directives,
