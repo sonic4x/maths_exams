@@ -1,0 +1,10 @@
+.options {
+  display: grid;
+  grid-template-columns: 20% auto;
+}
+
+label {
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
