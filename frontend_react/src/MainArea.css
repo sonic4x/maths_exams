@@ -56,3 +56,17 @@ h1.test-msg {
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),
     0 0 8px rgba(102, 175, 233, 0.6);
 }
+
+.hidden {
+  display: none;
+}
+
+.rate-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+div.chart {
+  width: 90%;
+  margin: 5%;
+}

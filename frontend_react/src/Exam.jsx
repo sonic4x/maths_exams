@@ -1,11 +1,12 @@
 import "./MainArea.css";
 import axios from "axios";
 import global_v from "./global_v";
-import { Select, Slider, Space, Layout } from "antd";
-import { Input, Modal } from "antd";
+import { Layout } from "antd";
+import { Input } from "antd";
 
 import { Col, Row } from "antd";
 import { useEffect, useState } from "react";
+import FinishDialog from "./FinishDialog";
 const { Content } = Layout;
 
 function Exam(props) {
@@ -15,8 +16,8 @@ function Exam(props) {
   const [isWrong, setIsWrong] = useState(false);
   const [finishResult, setFinishResult] = useState({
     duration: 0,
-    wrong_num: 0,
-    break_record: false,
+    wrongNum: 0,
+    breakRecord: false,
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -52,19 +53,18 @@ function Exam(props) {
           setIsWrong(false);
           if (res.data["end"] == 1) {
             console.log("end test");
+
             setFinishResult({
               duration: res.data["duration"],
-              wrong_num: res.data["wrong_num"],
-              break_record: res.data["break_record"],
+              wrongNum: res.data["wrong_num"],
+              breakRecord: res.data["breakRecord"],
             });
-
-            // this.dialog = true;
+            setIsModalOpen(true);
           } else {
             console.log("next");
             setTestMsg(res.data["exam"]);
             setTestId(res.data["test_id"]);
             setAnswer("");
-            setIsModalOpen(true);
           }
         } else {
           //   alert("回答错误");
@@ -76,12 +76,8 @@ function Exam(props) {
       });
   };
 
-  const chooseClass = () => {
-    if (isWrong) {
-      return "shake";
-    } else {
-      return "test-input";
-    }
+  const handleOk = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -108,16 +104,11 @@ function Exam(props) {
             </Col>
           </Row>
         </div>
-        <Modal
-          title='Basic Modal'
+        <FinishDialog
           open={isModalOpen}
-          //   onOk={handleOk}
-          //   onCancel={handleCancel}
-        >
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-        </Modal>
+          onCancel={handleOk}
+          result={finishResult}
+        />
       </div>
     </Layout>
   );

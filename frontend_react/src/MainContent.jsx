@@ -1,11 +1,12 @@
 import Exam from "./Exam";
+import History from "./History";
 
 function TestComponent(props) {
   return <Exam testId='1' />;
 }
 
 function HistoryComponent(props) {
-  return <h1>HistoryComponent</h1>;
+  return <History />;
 }
 
 function MainContent(props) {
