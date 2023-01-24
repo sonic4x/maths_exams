@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Select, Slider, Space } from "antd";
-import "./OptionsPanel.css";
+import { FormOutlined, LineChartOutlined } from "@ant-design/icons";
+import { Select, Slider, Space, Button } from "antd";
+import "./MainArea.css";
 
 // import { FrownOutlined, SmileOutlined } from "@ant-design/icons";
 
@@ -52,7 +53,7 @@ const formatter = (value) => {
   return satisfactionEmojis[value - 1];
 };
 
-const OptionsPanel = () => {
+const OptionsPanel = (props) => {
   const [level, setLevel] = useState(0);
   return (
     <Space
@@ -62,7 +63,7 @@ const OptionsPanel = () => {
       direction='vertical'
     >
       <div className='options'>
-        <label style={{ top: 4 }}>算术选择</label>
+        <label>算术选择</label>
         <Select
           mode='multiple'
           allowClear
@@ -76,7 +77,7 @@ const OptionsPanel = () => {
         />
       </div>
       <div className='options'>
-        <label style={{ top: 9 }}>难度选择</label>
+        <label>难度选择</label>
         <div>
           <Slider
             min={1}
@@ -92,6 +93,30 @@ const OptionsPanel = () => {
             value={level}
           />
         </div>
+      </div>
+      <div className='button-group'>
+        {/* <Space wrap> */}
+        <Button
+          type='primary'
+          shape='round'
+          icon={<FormOutlined />}
+          size='large'
+          style={{ background: "green" }}
+          onClick={props.onClickBeginTest}
+        >
+          开始答题
+        </Button>
+        <Button
+          type='primary'
+          shape='round'
+          icon={<LineChartOutlined />}
+          size='large'
+          style={{ background: "#9400FF" }}
+          onClick={props.onClickShowHistory}
+        >
+          历史表现
+        </Button>
+        {/* </Space> */}
       </div>
     </Space>
   );

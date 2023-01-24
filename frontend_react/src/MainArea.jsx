@@ -1,7 +1,11 @@
+import { useState } from "react";
 import { Col, Row } from "antd";
 import { Layout, theme } from "antd";
 
+import axios from "axios";
+import global_v from "./global_v";
 import OptionsPanel from "./OptionsPanel";
+import MainContent from "./MainContent";
 
 const { Content } = Layout;
 
@@ -9,6 +13,32 @@ const MainArea = () => {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+
+  const [showTest, setShowTest] = useState(false);
+  const [operatorList, setOperatorList] = useState(["+"]);
+  const [level, setLevel] = useState(1);
+
+  const onClickStartTest = (value) => {
+    // value is a list
+    // Apply setting
+    const path = "http://" + global_v.api_server + ":5000/api/setting";
+    // const path = "localhost" + ":5000/api/setting";
+    axios
+      .post(path, {
+        operator_list: operatorList,
+        difficulty: level,
+      })
+      .then((res) => {
+        console.log("Setting applied");
+      });
+    setShowTest(true);
+  };
+
+  const onClickHistory = (value) => {
+    // value is a list
+    setShowTest(false);
+  };
+
   return (
     <Layout>
       <Content
@@ -20,10 +50,14 @@ const MainArea = () => {
         }}
       >
         <Row>
-          <OptionsPanel />
+          <OptionsPanel
+            onClickBeginTest={onClickStartTest}
+            onClickShowHistory={onClickHistory}
+          />
         </Row>
-        <Row>MainContent</Row>
-        <Row>Copyright</Row>
+        <Row>
+          <MainContent isShowTest={showTest} />
+        </Row>
       </Content>
     </Layout>
   );
