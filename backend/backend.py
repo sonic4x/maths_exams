@@ -45,7 +45,7 @@ app.config.from_object(__name__)
 CORS(app, resources={r'/*': {'origins': '*'}})  # 允许来自于 Vue 的跨域访问请求
 
 nth_item = 0
-num_of_test = 2
+num_of_test = 50
 start_time = 0
 num_of_wrong_answer = 0
 max_operator_num=50
