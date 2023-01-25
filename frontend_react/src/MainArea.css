@@ -70,3 +70,47 @@ div.chart {
   width: 90%;
   margin: 5%;
 }
+
+.zoom {
+  animation: zoom 1s ease-in;
+  transform: translate3d(0, 0, 0);
+}
+
+@keyframes zoom {
+  0% {
+    color: black;
+    /* transform: translate3d(-1px, 0, 0); */
+    /* transform: scale(1); */
+  }
+
+  50% {
+    color: green;
+    /* transform: translate3d(10px, 0, 0); */
+    transform: scale(1.2);
+  }
+
+  100% {
+    color: blue;
+    transform: translateX(0rpx);
+    transform: scale(1);
+  }
+}
+
+.flipX {
+  animation: 1s anim-flipX ease;
+}
+@keyframes anim-flipX {
+  0% {
+    opacity: 0;
+    transform: rotateX(90def);
+  }
+  50% {
+    opacity: 1;
+    transform: rotateX(720deg);
+  }
+  100% {
+    /* animate nothing to pause animation at the end */
+    opacity: 1;
+    transform: rotateX(720deg);
+  }
+}

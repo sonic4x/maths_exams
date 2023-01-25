@@ -19,7 +19,7 @@ function Exam(props) {
     breakRecord: false,
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [showTestAnimation, setShowTestAnimation] = useState(true);
   useEffect(() => {
     const path = "http://" + global_v.api_server + ":5000/api/getexam";
     axios
@@ -40,7 +40,7 @@ function Exam(props) {
   };
 
   const submitAns = (e) => {
-    // Apply setting
+    setShowTestAnimation(false);
     const path = "http://" + global_v.api_server + ":5000/api/checkanswer";
     axios
       .post(path, {
@@ -64,6 +64,7 @@ function Exam(props) {
             setTestMsg(res.data["exam"]);
             setTestId(res.data["test_id"]);
             setAnswer("");
+            setShowTestAnimation(true);
           }
         } else {
           //   alert("回答错误");
@@ -87,7 +88,9 @@ function Exam(props) {
 
           <Row gutter={8}>
             <Col span={30}>
-              <h1 className='test-msg'>{testMsg} = </h1>
+              <h1 className={showTestAnimation ? "test-msg flipX" : "test-msg"}>
+                {testMsg} ={" "}
+              </h1>
             </Col>
             <Col span={30}>
               <Input
