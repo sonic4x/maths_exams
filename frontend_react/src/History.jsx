@@ -1,5 +1,5 @@
 import React from "react";
-import { useEffect, useCallback } from "react";
+import { useCallback } from "react";
 import Chart from "chart.js/auto";
 import axios from "axios";
 import global_v from "./global_v";
@@ -13,26 +13,17 @@ import "./MainArea.css";
 let durationChart;
 let precisionChart;
 function History(props) {
-  useEffect(() => {
-    // delayed = false;
-    // destroy exist chart
-    console.log("enters");
-
+  const chartsRef = useCallback((wrapper) => {
+    if (wrapper == null) {
+      console.log("wrapper is null");
+      return;
+    }
     const path = "http://" + global_v.api_server + ":5000/api/history";
     axios
       .post(path, {
         option: 0,
       })
       .then((res) => {
-        console.log("new chart");
-        if (durationChart instanceof Chart) {
-          console.log("destroy");
-          durationChart.destroy();
-        }
-
-        if (precisionChart instanceof Chart) {
-          precisionChart.destroy();
-        }
         durationChartData.data.labels = res.data["date_values"];
         durationChartData.data.datasets[0].data = res.data["duration_values"];
         const ctx_duration = document.getElementById("duration-chart");
@@ -43,11 +34,10 @@ function History(props) {
         const ctx_precision = document.getElementById("precision-chart");
         precisionChart = new Chart(ctx_precision, precisionChartData);
       });
-    console.log("out");
   }, []);
 
   return (
-    <div className='chart'>
+    <div className='chart' ref={chartsRef}>
       <canvas id='duration-chart'></canvas>
       <canvas id='precision-chart'></canvas>
     </div>
