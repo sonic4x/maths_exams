@@ -1,9 +1,6 @@
-import { useState } from "react";
 import { FormOutlined, LineChartOutlined } from "@ant-design/icons";
 import { Select, Slider, Space, Button } from "antd";
 import "./MainArea.css";
-
-// import { FrownOutlined, SmileOutlined } from "@ant-design/icons";
 
 const ops_label = ["加法", "减法", "乘法", "除法"];
 const ops_value = ["+", "-", "*", "/"];
@@ -14,11 +11,6 @@ for (let i = 0; i < ops_label.length; i++) {
     value: ops_value[i],
   });
 }
-const handleChange = (value) => {
-  // value is a list
-  console.log(`selected ${value}`);
-  //   TODO: save value to state (of parent).
-};
 
 // slider
 const slider_marks = {
@@ -54,7 +46,6 @@ const formatter = (value) => {
 };
 
 const OptionsPanel = (props) => {
-  const [level, setLevel] = useState(0);
   return (
     <Space
       style={{
@@ -72,7 +63,7 @@ const OptionsPanel = (props) => {
           }}
           placeholder='选择难度'
           defaultValue={["+", "-"]}
-          onChange={handleChange}
+          onChange={props.onChangeOperators}
           options={options}
         />
       </div>
@@ -89,8 +80,8 @@ const OptionsPanel = (props) => {
             }}
             // step={null}
             defaultValue={1}
-            onChange={setLevel}
-            value={level}
+            onChange={props.onChangeLevel}
+            value={props.level}
           />
         </div>
       </div>

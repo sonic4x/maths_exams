@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Col, Row } from "antd";
+import { Row } from "antd";
 import { Layout, theme } from "antd";
 
 import axios from "axios";
@@ -22,7 +22,7 @@ const MainArea = () => {
     // value is a list
     // Apply setting
     const path = "http://" + global_v.api_server + ":5000/api/setting";
-    // const path = "localhost" + ":5000/api/setting";
+
     axios
       .post(path, {
         operator_list: operatorList,
@@ -39,6 +39,18 @@ const MainArea = () => {
     setShowTest(false);
   };
 
+  const onChangeOperators = (value) => {
+    // value is a list
+    console.log(`selected ${value}`);
+    setOperatorList(value);
+  };
+
+  const onChangeLevel = (value) => {
+    // value is a list
+    console.log(`selected ${value}`);
+    setLevel(value);
+  };
+
   return (
     <Layout>
       <Content
@@ -51,6 +63,9 @@ const MainArea = () => {
       >
         <Row>
           <OptionsPanel
+            level={level}
+            onChangeOperators={onChangeOperators}
+            onChangeLevel={onChangeLevel}
             onClickBeginTest={onClickStartTest}
             onClickShowHistory={onClickHistory}
           />

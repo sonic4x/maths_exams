@@ -7,7 +7,6 @@ import { Input } from "antd";
 import { Col, Row } from "antd";
 import { useEffect, useState } from "react";
 import FinishDialog from "./FinishDialog";
-const { Content } = Layout;
 
 function Exam(props) {
   const [testMsg, setTestMsg] = useState("");
@@ -49,9 +48,9 @@ function Exam(props) {
         test_answer: e.target.value,
       })
       .then((res) => {
-        if (res.data["correct"] == 1) {
+        if (res.data["correct"] === 1) {
           setIsWrong(false);
-          if (res.data["end"] == 1) {
+          if (res.data["end"] === 1) {
             console.log("end test");
 
             setFinishResult({

@@ -1,5 +1,5 @@
 import logo from "./logo_maths.svg";
-import { Layout, theme, Divider } from "antd";
+import { Layout, theme } from "antd";
 import "./App.css";
 
 const { Header } = Layout;
