@@ -17,7 +17,7 @@ function FinishDialog(props) {
         : "全对，太棒了！";
 
     rate = 5;
-    if (!props.result.breakRecord) rate -= 0.5;
+    // if (!props.result.breakRecord) rate -= 0.5;
     if (props.result.wrongNum > 5) rate -= 1;
     else if (props.result.wrongNum > 0) rate -= 0.5;
     console.log(rate);
