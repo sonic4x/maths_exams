@@ -7,6 +7,10 @@ import global_v from "./global_v";
 import OptionsPanel from "./OptionsPanel";
 import MainContent from "./MainContent";
 
+import { CustomerServiceOutlined } from "@ant-design/icons";
+import { FloatButton } from "antd";
+import season_train from "./seasontrain.mp3";
+
 const { Content } = Layout;
 
 const MainArea = () => {
@@ -17,6 +21,19 @@ const MainArea = () => {
   const [showTest, setShowTest] = useState(false);
   const [operatorList, setOperatorList] = useState(["+"]);
   const [level, setLevel] = useState(1);
+  const [isMusicOn, setIsMusicOn] = useState(false);
+
+  const toggleMusic = () => {
+    var x = document.getElementById("myAudio");
+
+    if (isMusicOn) {
+      x.pause();
+      setIsMusicOn(false);
+    } else {
+      x.play();
+      setIsMusicOn(true);
+    }
+  };
 
   const onClickStartTest = (value) => {
     // value is a list
@@ -73,6 +90,16 @@ const MainArea = () => {
         <Row>
           <MainContent isShowTest={showTest} />
         </Row>
+        <FloatButton
+          style={{
+            right: 24,
+            bottom: 80,
+          }}
+          tooltip='Music'
+          icon={<CustomerServiceOutlined />}
+          onClick={toggleMusic}
+        />
+        <audio id='myAudio' src={season_train} loop='loop'></audio>
       </Content>
     </Layout>
   );

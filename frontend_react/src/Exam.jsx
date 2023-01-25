@@ -3,6 +3,8 @@ import axios from "axios";
 import global_v from "./global_v";
 import { Layout } from "antd";
 import { Input } from "antd";
+import { UndoOutlined } from "@ant-design/icons";
+import { FloatButton } from "antd";
 
 import { Col, Row } from "antd";
 import { useEffect, useState } from "react";
@@ -20,6 +22,7 @@ function Exam(props) {
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showTestAnimation, setShowTestAnimation] = useState(true);
+
   useEffect(() => {
     const path = "http://" + global_v.api_server + ":5000/api/getexam";
     axios
@@ -37,6 +40,22 @@ function Exam(props) {
   const onChange = (e) => {
     console.log(e.target.value);
     setAnswer(e.target.value);
+  };
+
+  const restartTest = (e) => {
+    setShowTestAnimation(false);
+    const path = "http://" + global_v.api_server + ":5000/api/getexam";
+    axios
+      .get(path)
+      .then((res) => {
+        setTestMsg(res.data["exam"]);
+        setTestId(res.data["test_id"]);
+        setShowTestAnimation(true);
+      })
+      .catch((error) => {
+        // eslint-disable-next-line
+        console.error(error);
+      });
   };
 
   const submitAns = (e) => {
@@ -106,6 +125,20 @@ function Exam(props) {
             </Col>
           </Row>
         </div>
+        <FloatButton.Group
+          shape='circle'
+          style={{
+            right: 24,
+            bottom: 24,
+          }}
+        >
+          <FloatButton
+            tooltip='restart'
+            icon={<UndoOutlined />}
+            onClick={restartTest}
+          />
+        </FloatButton.Group>
+
         <FinishDialog
           open={isModalOpen}
           onCancel={handleOk}
