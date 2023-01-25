@@ -8,11 +8,9 @@ let wrongNumMsg;
 let rate;
 
 function FinishDialog(props) {
-  console.log("FinishDialog");
   // useEffect with useCallback, this way, useEffect won't be called repeatedly.
   // Only when props.result change, it will re-calculate.
   const calcResult = useCallback(() => {
-    console.log("finish_useCallback");
     wrongNumMsg =
       props.result.wrongNum > 0
         ? "共答错" + props.result.wrongNum + "题。"
@@ -26,7 +24,6 @@ function FinishDialog(props) {
   }, [props.result]);
 
   useEffect(() => {
-    console.log("finish_useEffect");
     calcResult();
   }, [calcResult]);
 

@@ -9,9 +9,6 @@ import { precisionChartData } from "./precision_chart_data";
 
 import "./MainArea.css";
 
-// let delayed;
-let durationChart;
-let precisionChart;
 function History(props) {
   const chartsRef = useCallback((wrapper) => {
     if (wrapper == null) {
@@ -27,12 +24,12 @@ function History(props) {
         durationChartData.data.labels = res.data["date_values"];
         durationChartData.data.datasets[0].data = res.data["duration_values"];
         const ctx_duration = document.getElementById("duration-chart");
-        durationChart = new Chart(ctx_duration, durationChartData);
+        new Chart(ctx_duration, durationChartData);
 
         precisionChartData.data.labels = res.data["date_values"];
         precisionChartData.data.datasets[0].data = res.data["precision_values"];
         const ctx_precision = document.getElementById("precision-chart");
-        precisionChart = new Chart(ctx_precision, precisionChartData);
+        new Chart(ctx_precision, precisionChartData);
       });
   }, []);
 
