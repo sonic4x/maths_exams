@@ -15,6 +15,9 @@ jobs:
     # 使用别人的action
     - uses: actions/checkout@v2
     # 步骤名称
+    - name: cd frontend
+      # 步骤执行指令
+      run: cd frontend
     - name: npm install
       # 步骤执行指令
       run: npm install
