@@ -45,13 +45,5 @@ deta new --python maths-app
 // view 
 deta visor open  // open browser to view the log, manage your micro
 
-{
-	"name": "maths-app",
-	"id": "5c537081-8284-4691-80aa-f9af3138582e",
-	"project": "d016ywl5",
-	"runtime": "python3.9",
-	"endpoint": "https://75t40m.deta.dev",
-	"region": "ap-south-1",
-	"visor": "disabled",
-	"http_auth": "disabled"
-}
+enjoy: https://maths.deta.dev/
+
