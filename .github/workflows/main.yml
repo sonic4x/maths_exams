@@ -3,10 +3,10 @@ name: Build & deploy
 on:
   push:
     branches:
-      - auto_deploy_react
-#   pull_request:
-#     branches:
-#       - auto_deploy_react
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
@@ -38,7 +38,7 @@ jobs:
     name: Deploy
     needs: build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/auto_deploy_react'
+    if: github.ref == 'refs/heads/main'
     
     steps:
     - name: Download artifact
