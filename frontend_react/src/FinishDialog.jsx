@@ -20,7 +20,7 @@ function FinishDialog(props) {
     // if (!props.result.breakRecord) rate -= 0.5;
     if (props.result.wrongNum > 5) rate -= 1;
     else if (props.result.wrongNum > 0) rate -= 0.5;
-    console.log(rate);
+    // console.log(rate);
   }, [props.result]);
 
   useEffect(() => {

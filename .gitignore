@@ -1,3 +1,5 @@
 .venv
 .vscode
+deploy
+backend/static
 package-lock.json

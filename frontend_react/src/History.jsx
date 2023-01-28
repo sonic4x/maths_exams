@@ -12,10 +12,10 @@ import "./MainArea.css";
 function History(props) {
   const chartsRef = useCallback((wrapper) => {
     if (wrapper == null) {
-      console.log("wrapper is null");
+      // console.log("wrapper is null");
       return;
     }
-    const path = "http://" + global_v.api_server + ":5000/api/history";
+    const path = global_v.api_server + "/api/history";
     axios
       .post(path, {
         option: 0,

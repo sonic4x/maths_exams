@@ -1,5 +1,5 @@
-from tabnanny import check
-from turtle import begin_fill
+# from tabnanny import check
+# from turtle import begin_fill
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import json
@@ -87,6 +87,7 @@ def setting():
     data = json.loads(request.data)
     difficulty = int(data['difficulty'])
     operators = data['operator_list']
+    print("operators: {}".format(operators))
 
     if operators == ['*']:
         if difficulty >= 3:

@@ -19,7 +19,7 @@ const MainArea = () => {
   } = theme.useToken();
 
   const [showTest, setShowTest] = useState(false);
-  const [operatorList, setOperatorList] = useState(["+"]);
+  const [operatorList, setOperatorList] = useState(["+", "-"]);
   const [level, setLevel] = useState(1);
   const [isMusicOn, setIsMusicOn] = useState(false);
 
@@ -38,7 +38,7 @@ const MainArea = () => {
   const onClickStartTest = (value) => {
     // value is a list
     // Apply setting
-    const path = "http://" + global_v.api_server + ":5000/api/setting";
+    const path = global_v.api_server + "/api/setting";
 
     axios
       .post(path, {
@@ -46,7 +46,7 @@ const MainArea = () => {
         difficulty: level,
       })
       .then((res) => {
-        console.log("Setting applied");
+        // console.log("Setting applied");
       });
     setShowTest(true);
   };
@@ -58,13 +58,13 @@ const MainArea = () => {
 
   const onChangeOperators = (value) => {
     // value is a list
-    console.log(`selected ${value}`);
+    // console.log(`selected ${value}`);
     setOperatorList(value);
   };
 
   const onChangeLevel = (value) => {
     // value is a list
-    console.log(`selected ${value}`);
+    // console.log(`selected ${value}`);
     setLevel(value);
   };
 

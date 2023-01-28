@@ -24,7 +24,7 @@ function Exam(props) {
   const [showTestAnimation, setShowTestAnimation] = useState(true);
 
   useEffect(() => {
-    const path = "http://" + global_v.api_server + ":5000/api/getexam";
+    const path = global_v.api_server + "/api/getexam";
     axios
       .get(path)
       .then((res) => {
@@ -38,13 +38,14 @@ function Exam(props) {
   }, []);
 
   const onChange = (e) => {
-    console.log(e.target.value);
+    // console.log(e.target.value);
     setAnswer(e.target.value);
   };
 
   const restartTest = (e) => {
     setShowTestAnimation(false);
-    const path = "http://" + global_v.api_server + ":5000/api/getexam";
+    const path = global_v.api_server + "/api/getexam";
+
     axios
       .get(path)
       .then((res) => {
@@ -60,7 +61,7 @@ function Exam(props) {
 
   const submitAns = (e) => {
     setShowTestAnimation(false);
-    const path = "http://" + global_v.api_server + ":5000/api/checkanswer";
+    const path = global_v.api_server + "/api/checkanswer";
     axios
       .post(path, {
         test_str: testMsg,
@@ -70,7 +71,7 @@ function Exam(props) {
         if (res.data["correct"] === 1) {
           setIsWrong(false);
           if (res.data["end"] === 1) {
-            console.log("end test");
+            // console.log("end test");
 
             setFinishResult({
               duration: res.data["duration"],
@@ -79,7 +80,7 @@ function Exam(props) {
             });
             setIsModalOpen(true);
           } else {
-            console.log("next");
+            // console.log("next");
             setTestMsg(res.data["exam"]);
             setTestId(res.data["test_id"]);
             setAnswer("");
