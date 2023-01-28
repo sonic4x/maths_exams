@@ -1,5 +1,6 @@
 {
   "name": "frontend_react",
+  "homepage": "https://sonic4x.github.io/maths_exams/", // for gibhub pages
   "version": "0.1.0",
   "private": true,
   "dependencies": {
