@@ -22,14 +22,17 @@ function Exam(props) {
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showTestAnimation, setShowTestAnimation] = useState(true);
+  const [initState, setInitState] = useState("invalid");
 
   useEffect(() => {
     const path = global_v.api_server + "/api/getexam";
+
     axios
       .get(path)
       .then((res) => {
         setTestMsg(res.data["exam"]);
         setTestId(res.data["test_id"]);
+        setInitState("ready");
       })
       .catch((error) => {
         // eslint-disable-next-line
@@ -102,7 +105,7 @@ function Exam(props) {
 
   return (
     <Layout style={{ background: "white" }}>
-      <div>
+      <div className={initState === "ready" ? "" : "hidden"}>
         <div className='options'>
           <label>第{testId}题</label>
 
