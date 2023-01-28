@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/maths_exams/static/css/main.fdc03777.css",
+    "main.js": "/maths_exams/static/js/main.6c57bf89.js",
+    "static/media/seasontrain.mp3": "/maths_exams/static/media/seasontrain.c11238e312e75715ec87.mp3",
+    "static/media/finish.mp3": "/maths_exams/static/media/finish.b21ea6ced4a702698588.mp3",
+    "static/media/logo_maths.svg": "/maths_exams/static/media/logo_maths.93794a1ace3a2e92131ad92cda44aeb0.svg",
+    "index.html": "/maths_exams/index.html",
+    "main.fdc03777.css.map": "/maths_exams/static/css/main.fdc03777.css.map",
+    "main.6c57bf89.js.map": "/maths_exams/static/js/main.6c57bf89.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.fdc03777.css",
+    "static/js/main.6c57bf89.js"
+  ]
+}
