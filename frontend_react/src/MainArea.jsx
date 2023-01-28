@@ -34,8 +34,11 @@ const MainArea = () => {
       setIsMusicOn(true);
     }
   };
+  const onStartTest = (value) => {
+    setShowTest(true);
+  };
 
-  const onClickStartTest = (value) => {
+  const onApplySettings = (value) => {
     // value is a list
     // Apply setting
     const path = global_v.api_server + "/api/setting";
@@ -48,7 +51,7 @@ const MainArea = () => {
       .then((res) => {
         // console.log("Setting applied");
       });
-    setShowTest(true);
+    // setShowTest(true);
   };
 
   const onClickHistory = (value) => {
@@ -83,7 +86,8 @@ const MainArea = () => {
             level={level}
             onChangeOperators={onChangeOperators}
             onChangeLevel={onChangeLevel}
-            onClickBeginTest={onClickStartTest}
+            onClickApplySettings={onApplySettings}
+            onClickBeginTest={onStartTest}
             onClickShowHistory={onClickHistory}
           />
         </Row>

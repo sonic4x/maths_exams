@@ -1,4 +1,8 @@
-import { FormOutlined, LineChartOutlined } from "@ant-design/icons";
+import {
+  FormOutlined,
+  LineChartOutlined,
+  CarryOutOutlined,
+} from "@ant-design/icons";
 import { Select, Slider, Space, Button } from "antd";
 import "./MainArea.css";
 
@@ -87,6 +91,16 @@ const OptionsPanel = (props) => {
       </div>
       <div className='button-group'>
         {/* <Space wrap> */}
+        <Button
+          type='primary'
+          shape='round'
+          icon={<CarryOutOutlined />}
+          size='large'
+          style={{ background: "blue" }}
+          onClick={props.onClickApplySettings}
+        >
+          应用设定
+        </Button>
         <Button
           type='primary'
           shape='round'
