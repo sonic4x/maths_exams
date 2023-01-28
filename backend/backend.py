@@ -51,7 +51,7 @@ num_of_wrong_answer = 0
 max_operator_num=50
 min_operator_num=1
 min_diff_between_operator_numbers = 1
-operators = []
+operators = ['+', '-']
 history_file = "history_record.csv"
 break_record = 0
 
