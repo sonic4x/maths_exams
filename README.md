@@ -31,9 +31,23 @@ npm install
 npm start
 ```
 
+# combine backend and frontend
+take frontend_react as example:
+```
+cd frontend_react
+npm run build             # generate "build" folder
+mv build/static/* build/  # modify content in build folder, move "static" subfolder content to parent folder
+ln -s build/ ../backend/static  # create soft link, adding the resource from frontend "build" to backend "static"
+
+# Run
+cd backend
+source .venv/bin/activate
+python backend.py
+```
+
 # Deploy #
 deploy via deta:
-
+cd frontend_react
 npm run build  generate "build" folder
 mv build/static/* build/
 cp build/* backend/static
