@@ -3,10 +3,10 @@ name: Build & deploy
 on:
   push:
     branches:
-      - main
+      - auto_deploy_react
   pull_request:
     branches:
-      - main
+      - auto_deploy_react
 
 jobs:
   build:
