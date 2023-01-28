@@ -1,39 +1,54 @@
-name: Build app and deploy 
+name: Build & deploy
+
 on:
-  #监听push操作
   push:
     branches:
-      # mian分支，你也可以改成其他分支
       - main
+  pull_request:
+    branches:
+      - main
+
 jobs:
-  # 任务ID
   build:
-    # 运行环境
+    name: Build
     runs-on: ubuntu-latest
-    # 步骤
+    
     steps:
-    # 使用别人的action
-    - uses: actions/checkout@v2
-    # 步骤名称
-    - name: cd frontend
-      # 步骤执行指令
-      run: cd frontend
-    - name: npm install
-      # 步骤执行指令
-      run: npm install
-    - name: npm run build
-      run: npm run build
-    # 命名这个任务为发布Deploy
-    - name: Deploy
-      # 因为构建之后，需要把代码上传到服务器上，所以需要连接到ssh，并且做一个拷贝操作
-      uses: cross-the-world/scp-pipeline@master
-      env:
-        WELCOME: "ssh scp ssh pipelines"
-        LASTSSH: "Doing something after copying"
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+#     - name: Install Node.js
+#       uses: actions/setup-node@v1
+#       with:
+#         node-version: 16.x
+    
+    - name: Install NPM packages and Build
+      run: |
+        cd frontend_react
+        npm ci
+        npm run build
+
+    - name: Upload production-ready build files
+      uses: actions/upload-artifact@v3
       with:
-        host: ${{ secrets.USER_HOST }}
-        user: ${{ secrets.USER_NAME }}
-        pass: ${{ secrets.USER_PASS }}
-        connect_timeout: 10s
-        local: './dist/*'
-        remote: /home/www/dist
+        name: production-files
+        path: ./build
+  
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Download artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: production-files
+        path: ./build
+
+    - name: Deploy to gh-pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./build
