@@ -297,11 +297,14 @@ if __name__ == '__main__':
                     help="Expose to the specific host, if not set, just use localhost")
     ap.add_argument("-n", "--num_test",
                     help="num of test to have")
+    ap.add_argument("-p", "--port", default=5000,
+                    help="expose port, if not set, use 5000")
     args = vars(ap.parse_args())
     if args["num_test"] is not None:
         num_of_test = int(args["num_test"])
     host = args["host"]
+    port = args["port"]
     if host == '':
-        app.run()  # run local host
+        app.run(port=port)  # run local host
     else:
-        app.run(host=host)  # python backend.py -e 10.0.0.19
+        app.run(host=host, port=port)  # python backend.py -e 10.0.0.19
