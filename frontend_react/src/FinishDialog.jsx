@@ -1,16 +1,18 @@
 import { Modal, Rate } from "antd";
 import sound_finish from "./finish.mp3";
-import { useEffect, useCallback } from "react";
+import { useEffect } from "react";
 
 import "./MainArea.css";
+import { useState } from "react";
 
 let wrongNumMsg;
 let rate;
 
 function FinishDialog(props) {
-  // useEffect with useCallback, this way, useEffect won't be called repeatedly.
-  // Only when props.result change, it will re-calculate.
-  const calcResult = useCallback(() => {
+  const [readyShow, setReadyShow] = useState(false);
+  const calcResult = () => {
+    console.log("calcResult");
+    console.log(props.result.wrongNum);
     wrongNumMsg =
       props.result.wrongNum > 0
         ? "共答错" + props.result.wrongNum + "题。"
@@ -20,26 +22,37 @@ function FinishDialog(props) {
     // if (!props.result.breakRecord) rate -= 0.5;
     if (props.result.wrongNum > 5) rate -= 1;
     else if (props.result.wrongNum > 0) rate -= 0.5;
-    // console.log(rate);
-  }, [props.result]);
+    console.log(rate);
+  };
 
   useEffect(() => {
+    setReadyShow(false);
+    console.log("useEffect");
     calcResult();
-  }, [calcResult]);
+    // ensure when the diag show, all the value are updated
+    if (props.open) {
+      setReadyShow(true);
+    }
+  }, [props.result]);
+
+  const handleCancel = () => {
+    setReadyShow(false);
+    props.onCancel();
+  };
 
   return (
     <Modal
       title='恭喜你完成所有考题'
-      open={props.open}
-      onOk={props.onCancel}
-      onCancel={props.onCancel}
+      open={readyShow}
+      onOk={handleCancel}
+      onCancel={handleCancel}
     >
       <audio src={sound_finish} autoPlay='autoplay'></audio>
       <p>{wrongNumMsg}</p>
       <p>共耗时：{props.result.duration}</p>
       <p className={props.result.breakRecord ? "" : "hidden"}>破记录了哟🥙</p>
       <div className='rate-wrapper'>
-        <Rate allowHalf disabled defaultValue={rate} />
+        <Rate allowHalf disabled value={rate} />
       </div>
     </Modal>
   );
