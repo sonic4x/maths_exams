@@ -1,6 +1,6 @@
 import { Modal, Rate } from "antd";
 import sound_finish from "./finish.mp3";
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 
 import "./MainArea.css";
 import { useState } from "react";
@@ -10,7 +10,8 @@ let rate;
 
 function FinishDialog(props) {
   const [readyShow, setReadyShow] = useState(false);
-  const calcResult = () => {
+
+  const calcResult = useCallback(() => {
     console.log("calcResult");
     console.log(props.result.wrongNum);
     wrongNumMsg =
@@ -23,7 +24,7 @@ function FinishDialog(props) {
     if (props.result.wrongNum > 5) rate -= 1;
     else if (props.result.wrongNum > 0) rate -= 0.5;
     console.log(rate);
-  };
+  }, [props.result]);
 
   useEffect(() => {
     setReadyShow(false);
@@ -33,7 +34,7 @@ function FinishDialog(props) {
     if (props.open) {
       setReadyShow(true);
     }
-  }, [props.result]);
+  }, [props.open, calcResult]);
 
   const handleCancel = () => {
     setReadyShow(false);
