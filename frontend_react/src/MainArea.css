@@ -68,7 +68,14 @@ h1.test-msg {
 
 div.chart {
   width: 90%;
-  margin: 5%;
+  margin: 0% 5% 5% 5%;
+}
+
+div.chart-options {
+  margin: 3% 5% 0% 5%;
+  display: flex;
+  justify-content: center;
+  width: 90%;
 }
 
 .zoom {

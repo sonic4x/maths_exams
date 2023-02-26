@@ -130,8 +130,12 @@ def setting():
 @app.route('/api/history', methods=['POST'])
 def fetch_history():
     if os.path.exists(history_file):
+        data = json.loads(request.data)
+        row_needed = int(data["option"])
+
         df = pd.read_csv(history_file)
-        print(df)
+        rows = len(df)
+        df = df.tail(min(row_needed, rows))  # last week history
 
         col_date = df['date']
         # col_date= list(map(str, col_date))
@@ -168,9 +172,9 @@ def check_answer():
     print(request.data)
     data = json.loads(request.data)  # 将json字符串转为dict
     eval_data = get_op_str_from_human(data['test_str'])
-    print("eval_data:"+ eval_data)
+    # print("eval_data:"+ eval_data)
     result = str(eval(eval_data, {}, {}))
-    print("result:" + result)
+    # print("result:" + result)
 
     if math.isclose(float(result), float(data['test_answer']), rel_tol=1e-3):
         if nth_item >= num_of_test:
@@ -274,9 +278,15 @@ def get_random_test():
     if num_a - num_b < min_diff_between_operator_numbers: # ensure the 2 numbers differ at specific level
         num_a += min_diff_between_operator_numbers
         num_a = min(num_a, max_operator_num)
+
     # random operator
-    # operators = ['+', '-']
     op = choice(operators)
+
+    # Avoid some special number (17,71,11,77), which is hard to recognize using handwriting
+    number_need_to_avoid = [11,17,71,77]
+    res = eval(str(num_a) + op + str(num_b))
+    if any( i == res for i in number_need_to_avoid):
+        num_a += 1
 
     exam = str(num_a) + ' ' + op + ' ' + str(num_b)
     exam = get_op_str_to_human(exam)
