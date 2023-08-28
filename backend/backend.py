@@ -1,6 +1,7 @@
 # used in nas:
 # source .venv/bin/activate
 # nohup python backend.py -e 10.0.0.21 -p 12345 &
+# If you want to modify the backend.py, just delete it in the nas, and copy the new one. Process auto launch:)
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import json
