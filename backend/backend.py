@@ -1,5 +1,6 @@
-# from tabnanny import check
-# from turtle import begin_fill
+# used in nas:
+# source .venv/bin/activate
+# nohup python backend.py -e 10.0.0.21 -p 12345 &
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import json
@@ -42,25 +43,26 @@ DEBUG = True
 app = Flask(__name__)
 app.config.from_object(__name__)
 
-CORS(app, resources={r'/*': {'origins': '*'}})  # 允许来自于 Vue 的跨域访问请求
+CORS(app, resources={r"/*": {"origins": "*"}})  # 允许来自于 Vue 的跨域访问请求
 
 nth_item = 0
 num_of_test = 50
 start_time = 0
 num_of_wrong_answer = 0
-max_operator_num=50
-min_operator_num=1
+max_operator_num = 50
+min_operator_num = 1
 min_diff_between_operator_numbers = 1
-operators = ['+', '-']
+operators = ["+", "-"]
 history_file = "history_record.csv"
 break_record = 0
 
-@app.route('/api/getdiscription', methods=['GET'])
+
+@app.route("/api/getdiscription", methods=["GET"])
 def ping_pong():
-    return jsonify('1-50 加减法')
+    return jsonify("1-50 加减法")
 
 
-@app.route('/api/getexam', methods=['GET'])
+@app.route("/api/getexam", methods=["GET"])
 def get_exam():
     global nth_item
     global start_time
@@ -77,57 +79,52 @@ def get_exam():
         test_id=nth_item,
     )
 
-@app.route('/api/setting',methods=['POST'])
+
+@app.route("/api/setting", methods=["POST"])
 def setting():
     global max_operator_num
     global min_operator_num
+    global max_mult_operator_num
+    global min_mult_operator_num
     global min_diff_between_operator_numbers
     global operators
 
     data = json.loads(request.data)
-    difficulty = int(data['difficulty'])
-    operators = data['operator_list']
+    difficulty = int(data["difficulty"])
+    operators = data["operator_list"]
     print("operators: {}".format(operators))
 
-    if operators == ['*']:
-        if difficulty >= 3:
-            min_operator_num = 5
-            max_operator_num = 10
-        elif difficulty == 2:
-            min_operator_num = 2
-            max_operator_num = 9
-        elif difficulty == 1:
-            min_operator_num = 2
-            max_operator_num = 7
-        else:
-            min_operator_num = 2
-            max_operator_num = 5
-    elif operators == ["/"]:
-        min_operator_num = 1
-        max_operator_num = 9
+    if difficulty >= 3:
+        min_operator_num = 30
+        max_operator_num = 100
+        min_diff_between_operator_numbers = 11
+        min_mult_operator_num = 3
+        max_mult_operator_num = 10
+    elif difficulty == 2:
+        min_operator_num = 30
+        max_operator_num = 60
+        min_diff_between_operator_numbers = 7
+        min_mult_operator_num = 2
+        max_mult_operator_num = 10
+    elif difficulty == 1:
+        min_operator_num = 10
+        max_operator_num = 50
+        min_diff_between_operator_numbers = 5
+        min_mult_operator_num = 2
+        max_mult_operator_num = 9
     else:
-        if difficulty >= 3:
-            min_operator_num = 30
-            max_operator_num = 100
-            min_diff_between_operator_numbers = 11
-        elif difficulty == 2:
-            min_operator_num = 30
-            max_operator_num = 60
-            min_diff_between_operator_numbers = 7
-        elif difficulty == 1:
-            min_operator_num = 10
-            max_operator_num = 50
-            min_diff_between_operator_numbers = 5
-        else:
-            min_operator_num = 1
-            max_operator_num = 50
-            min_diff_between_operator_numbers = 2
+        min_operator_num = 1
+        max_operator_num = 50
+        min_diff_between_operator_numbers = 2
+        min_mult_operator_num = 1
+        max_mult_operator_num = 9
 
     return jsonify(
         difficulty=difficulty,
     )
 
-@app.route('/api/history', methods=['POST'])
+
+@app.route("/api/history", methods=["POST"])
 def fetch_history():
     if os.path.exists(history_file):
         data = json.loads(request.data)
@@ -137,19 +134,21 @@ def fetch_history():
         rows = len(df)
         df = df.tail(min(row_needed, rows))  # last week history
 
-        col_date = df['date']
+        col_date = df["date"]
         # col_date= list(map(str, col_date))
-        col_date = col_date.values.tolist() # put the specific column into list
+        col_date = col_date.values.tolist()  # put the specific column into list
 
-        col_duration = df['duration']
-        col_duration = list(map(int, col_duration)) # convert the all elements from str to int, then convert to list
+        col_duration = df["duration"]
+        col_duration = list(
+            map(int, col_duration)
+        )  # convert the all elements from str to int, then convert to list
 
-        col_precision=df['correct_rate']
+        col_precision = df["correct_rate"]
         col_precision = list(map(int, col_precision))
 
         print("date_values:{}".format(col_date))
         print("duration_values:{}".format(col_duration))
-        
+
         return jsonify(
             date_values=col_date,
             duration_values=col_duration,
@@ -162,8 +161,7 @@ def fetch_history():
         )
 
 
-
-@app.route('/api/checkanswer', methods=['POST'])
+@app.route("/api/checkanswer", methods=["POST"])
 def check_answer():
     global num_of_test
     global nth_item
@@ -171,21 +169,23 @@ def check_answer():
 
     print(request.data)
     data = json.loads(request.data)  # 将json字符串转为dict
-    eval_data = get_op_str_from_human(data['test_str'])
+    eval_data = get_op_str_from_human(data["test_str"])
     # print("eval_data:"+ eval_data)
     result = str(eval(eval_data, {}, {}))
     # print("result:" + result)
 
-    if math.isclose(float(result), float(data['test_answer']), rel_tol=1e-3):
+    if math.isclose(float(result), float(data["test_answer"]), rel_tol=1e-3):
         if nth_item >= num_of_test:
             # already reach the end
             # check the time spent
-            lap_time = round(time.time() - start_time) # Unit: second
+            lap_time = round(time.time() - start_time)  # Unit: second
             print("lap_time:{}".format(lap_time))
             duration_str = strftime("%H:%M:%S", gmtime(lap_time))
 
             # check correct rate
-            correct_rate = round(max(0,(num_of_test - num_of_wrong_answer)) / num_of_test * 100)
+            correct_rate = round(
+                max(0, (num_of_test - num_of_wrong_answer)) / num_of_test * 100
+            )
             print("correct_rate:{}%".format(correct_rate))
 
             # check if break the record
@@ -213,9 +213,8 @@ def check_answer():
         )
     else:
         num_of_wrong_answer += 1
-        return jsonify(
-            correct=0
-        )
+        return jsonify(correct=0)
+
 
 def save_history(today_date, test_duration, correct_rate):
     # check csv exist
@@ -228,17 +227,20 @@ def save_history(today_date, test_duration, correct_rate):
         # new file and write header, then save the content
         with open(history_file, "w") as csv_file:
             writer = csv.writer(csv_file)
-            writer.writerow(["date","duration","correct_rate"])
+            writer.writerow(["date", "duration", "correct_rate"])
             writer.writerow([today_date, test_duration, correct_rate])
+
 
 def is_break_record(test_duration):
     if os.path.exists(history_file):
         df = pd.read_csv(history_file)
-        df = df.sort_values(by=['duration'], ascending=True)
-        df = df.reset_index(drop=True) # After sorting, the index is messy, need to reindex.
+        df = df.sort_values(by=["duration"], ascending=True)
+        df = df.reset_index(
+            drop=True
+        )  # After sorting, the index is messy, need to reindex.
         print(df)
-        min_duration_value = df['duration'][0]
-        max_duration_value = df['duration'][len(df)-1]
+        min_duration_value = df["duration"][0]
+        max_duration_value = df["duration"][len(df) - 1]
         print(min_duration_value)
         print(max_duration_value)
 
@@ -249,72 +251,137 @@ def is_break_record(test_duration):
     else:
         return True
 
-@app.route('/')
+
+@app.route("/")
 def index():
-    return app.send_static_file('index.html')
+    return app.send_static_file("index.html")
 
 
-@app.route('/<path:fallback>')
-def fallback(fallback):       # Vue Router 的 mode 为 'hash' 时可移除该方法
-    if fallback.startswith('css/') or fallback.startswith('js/')\
-            or fallback.startswith('img/') or fallback == 'favicon.ico':
+@app.route("/<path:fallback>")
+def fallback(fallback):  # Vue Router 的 mode 为 'hash' 时可移除该方法
+    if (
+        fallback.startswith("css/")
+        or fallback.startswith("js/")
+        or fallback.startswith("img/")
+        or fallback == "favicon.ico"
+    ):
         return app.send_static_file(fallback)
     else:
-        return app.send_static_file('index.html')
+        return app.send_static_file("index.html")
+
+
+def get_nums_by_plus():
+    max_num = max_operator_num
+    min_num = min_operator_num
+    num_a = randrange(min_num, max_num + 1)
+    num_b = randrange(min_num, max_num + 1)
+
+    if num_a < num_b:
+        num_a, num_b = num_b, num_a  # swap the number
+
+    if (
+        num_a - num_b < min_diff_between_operator_numbers
+    ):  # ensure the 2 numbers differ at specific level
+        num_a += min_diff_between_operator_numbers
+        num_a = min(num_a, max_operator_num)
+
+    return num_a, num_b
+
+
+def get_nums_by_minus():
+    max_num = max_operator_num
+    min_num = min_operator_num
+    num_a = randrange(min_num, max_num + 1)
+    num_b = randrange(min_num, max_num + 1)
+    if num_a < num_b:
+        num_a, num_b = num_b, num_a  # swap the number
+
+    if (
+        num_a - num_b < min_diff_between_operator_numbers
+    ):  # ensure the 2 numbers differ at specific level
+        num_a += min_diff_between_operator_numbers
+        num_a = min(num_a, max_operator_num)
+
+    return num_a, num_b
+
+
+def get_nums_by_mult():
+    max_num = max_mult_operator_num
+    min_num = min_mult_operator_num
+    num_a = randrange(min_num, max_num + 1)
+    num_b = randrange(min_num, max_num + 1)
+    return num_a, num_b
+
+
+def get_nums_by_div():
+    max_num = max_operator_num
+    min_num = min_operator_num
+
+    num_a = randrange(min_num, max_num + 1)
+    if num_a % 2 == 1:
+        num_a += 1
+    num_b = 2
+
+    return num_a, num_b
+
+
+get_nums_dict = {
+    "+": get_nums_by_plus,
+    "-": get_nums_by_minus,
+    "*": get_nums_by_mult,
+    "/": get_nums_by_div,
+}
 
 
 def get_random_test():
     global nth_item
-    
-    max_num = max_operator_num
-    min_num = min_operator_num
 
-    num_a = randrange(min_num, max_num+1)
-    num_b = randrange(min_num, max_num+1)
-    if num_a < num_b:
-        num_a, num_b = num_b, num_a  # swap the number
-    
-
-    if num_a - num_b < min_diff_between_operator_numbers: # ensure the 2 numbers differ at specific level
-        num_a += min_diff_between_operator_numbers
-        num_a = min(num_a, max_operator_num)
+    num_a: number
+    num_b: number
 
     # random operator
     op = choice(operators)
+    num_a, num_b = get_nums_dict[op]()
 
     # Avoid some special number (17,71,11,77), which is hard to recognize using handwriting
-    number_need_to_avoid = [11,17,71,77]
+    number_need_to_avoid = [11, 17, 71, 77]
     res = eval(str(num_a) + op + str(num_b))
-    if any( i == res for i in number_need_to_avoid):
+    if any(i == res for i in number_need_to_avoid):
         num_a += 1
 
-    exam = str(num_a) + ' ' + op + ' ' + str(num_b)
+    exam = str(num_a) + " " + op + " " + str(num_b)
     exam = get_op_str_to_human(exam)
     nth_item += 1
     return exam
 
+
 def get_op_str_to_human(op):
-    return op.replace("*","x").replace("/","÷")
+    return op.replace("*", "x").replace("/", "÷")
+
 
 def get_op_str_from_human(op):
-    return op.replace("x","*").replace("÷","/")
+    return op.replace("x", "*").replace("÷", "/")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     # num_of_test = 50
-    host = ''
+    host = ""
     ap = argparse.ArgumentParser()
-    ap.add_argument("-e", "--host",
-                    help="Expose to the specific host, if not set, just use localhost")
-    ap.add_argument("-n", "--num_test",
-                    help="num of test to have")
-    ap.add_argument("-p", "--port", default=5000,
-                    help="expose port, if not set, use 5000")
+    ap.add_argument(
+        "-e",
+        "--host",
+        help="Expose to the specific host, if not set, just use localhost",
+    )
+    ap.add_argument("-n", "--num_test", help="num of test to have")
+    ap.add_argument(
+        "-p", "--port", default=5000, help="expose port, if not set, use 5000"
+    )
     args = vars(ap.parse_args())
     if args["num_test"] is not None:
         num_of_test = int(args["num_test"])
     host = args["host"]
     port = args["port"]
-    if host == '':
+    if host == "":
         app.run(port=port)  # run local host
     else:
         app.run(host=host, port=port)  # python backend.py -e 10.0.0.19
