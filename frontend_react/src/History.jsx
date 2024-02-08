@@ -14,23 +14,23 @@ import { Radio } from "antd";
 const history_options = [
   {
     label: "近一周",
-    value: "7",
+    value: 7,
   },
   {
     label: "近一月",
-    value: "30",
+    value: 30,
   },
   {
     label: "近三月",
-    value: "90",
+    value: 90,
   },
   {
     label: "近半年",
-    value: "180",
+    value: 180,
   },
   {
     label: "近一年",
-    value: "365",
+    value: 365,
   },
 ];
 
@@ -60,7 +60,7 @@ function History(props) {
         precision_chart.destroy();
       }
 
-      const path = global_v.api_server + "/api/history";
+      const path = global_v.api_server +"/api/history";
       console.log("option: " + historyOptions);
       axios
         .post(path, {

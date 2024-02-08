@@ -29,6 +29,11 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
+sudo npm install -g serve
+serve -s build -l 4000    #serve your static site on port 4000
+In nas:
+nohup serve -s build -l 12345 &
+exit   # this is must, or the nohup will take no effect
 ### `npm run eject`
 
 **Note: this is a one-way operation. Once you `eject`, you can't go back!**
