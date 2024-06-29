@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState} from "react";
 import { Row } from "antd";
 import { Layout, theme } from "antd";
 
@@ -10,6 +10,7 @@ import MainContent from "./MainContent";
 import { CustomerServiceOutlined } from "@ant-design/icons";
 import { FloatButton } from "antd";
 import season_train from "./seasontrain.mp3";
+
 
 const { Content } = Layout;
 
@@ -70,6 +71,20 @@ const MainArea = () => {
     // console.log(`selected ${value}`);
     setLevel(value);
   };
+
+  useEffect(() => {
+    const path = global_v.api_server + "/api/getlevel";
+
+    axios
+      .get(path)
+      .then((res) => {
+        setLevel(res.data["level"]);
+      })
+      .catch((error) => {
+        // eslint-disable-next-line
+        console.error(error);
+      });
+  }, []);
 
   return (
     <Layout>

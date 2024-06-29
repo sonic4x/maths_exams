@@ -9,6 +9,7 @@ label {
   justify-content: center;
   align-items: center;
   position: relative;
+  color: darkgreen;
 }
 
 .button-group {

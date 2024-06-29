@@ -22,25 +22,25 @@ const slider_marks = {
     style: {
       color: "green",
     },
-    label: <strong>B</strong>,
+    label: <strong>Easy</strong>,
   },
   2: {
     style: {
       color: "blue",
     },
-    label: <strong>A</strong>,
+    label: <strong>Normal</strong>,
   },
   3: {
     style: {
       color: "purple",
     },
-    label: <strong>A+</strong>,
+    label: <strong>Hard</strong>,
   },
   4: {
     style: {
       color: "orange",
     },
-    label: <strong>A++</strong>,
+    label: <strong>Very hard</strong>,
   },
 };
 
@@ -65,7 +65,7 @@ const OptionsPanel = (props) => {
           style={{
             width: "100%",
           }}
-          placeholder='选择难度'
+          placeholder='选择加减乘除运算'
           defaultValue={["+", "-"]}
           onChange={props.onChangeOperators}
           options={options}

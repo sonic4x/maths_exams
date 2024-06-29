@@ -75,7 +75,6 @@ function Exam(props) {
           setIsWrong(false);
           if (res.data["end"] === 1) {
             // console.log("end test");
-
             setFinishResult({
               duration: res.data["duration"],
               wrongNum: res.data["wrong_num"],
